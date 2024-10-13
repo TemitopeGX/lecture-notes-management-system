@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1>Lecture Notes Management System (View Notes) </h1>
+            </div>
+            <nav>
+                <div class="menu-icon" onclick="toggleMenu()">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <ul id="menu">
+                    <li><a href="{{ url_for('student_dashboard') }}">Dashboard</a></li>
+                    <li class="current"><a href="{{ url_for('view_notes') }}">View Notes</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Available Notes</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% if notes %}
+            <table>
+                <tr>
+                    <th>Title</th>
+                    <th>Course</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+                {% for note in notes %}
+                    <tr>
+                        <td>{{ note.title }}</td>
+                        <td>{{ note.course }}</td>
+                        <td>{{ note.description }}</td>
+                        <td><a href="{{ url_for('download_note', note_id=note.id) }}" class="btn">Download</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No notes available.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("menu");
+            menu.classList.toggle("show");
+        }
+    </script>
+</body>
+</html>

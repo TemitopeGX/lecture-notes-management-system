@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1>Lecture Notes Management System</h1>
+            </div>
+            <nav>
+                <div class="menu-icon" onclick="toggleMenu()">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <ul id="menu">
+                    <li class="current"><a href="{{ url_for('lecturer_dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('upload_notes') }}">Upload Notes</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Welcome, {{ current_user.username }}</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <h3>Your Uploaded Notes</h3>
+        {% if recent_notes %}
+            <table>
+                <tr>
+                    <th>Title</th>
+                    <th>Course</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+                {% for note in recent_notes %}
+                    <tr>
+                        <td>{{ note.title }}</td>
+                        <td>{{ note.course }}</td>
+                        <td>{{ note.description }}</td>
+                        <td>
+                            <a href="{{ url_for('download_note', note_id=note.id) }}" class="btn btn-small">Download</a>
+                            <form action="{{ url_for('delete_note', note_id=note.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this note?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No notes uploaded yet.</p>
+        {% endif %}
+        <a href="{{ url_for('upload_notes') }}" class="btn">Upload New Notes</a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("menu");
+            menu.classList.toggle("show");
+        }
+    </script>
+</body>
+</html>

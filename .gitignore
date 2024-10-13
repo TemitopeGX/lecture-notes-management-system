@@ -1,0 +1,8 @@
+     # .gitignore
+     __pycache__/
+     *.pyc
+     instance/
+     .env
+     venv/
+     *.db
+     uploads/
